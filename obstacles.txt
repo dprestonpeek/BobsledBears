@@ -1,0 +1,35 @@
+Big plans
+4 players
+Hub
+
+Small plans
+Obstacles:
+	Huge jump
+		The very first intro jump 
+	Blanks
+		6
+
+	small humps
+		2 at a time, like little mogulls
+		6 variations
+
+	Logs with ramps
+		Log that blocks entire path
+		Has small hump-sized ramp to clear
+			sometimes 2
+		4 variations
+	Big jump
+		Just a big unavoidable jump
+		4 duplicates
+	Drops
+		These seem to be random and unphasing
+		4 duplicates
+	Stumps
+		These are tree stumps placed anywhere in the path
+		4 variants
+		5 total
+	Ice speed strip
+		Player gains speed when sleds over it
+		3 variants
+		4 total
+	Finish line
