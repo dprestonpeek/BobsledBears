@@ -9,6 +9,10 @@ public class SledManager : MonoBehaviour
     [Range(1, 1000)]
     int gravity = 500;
 
+    [SerializeField]
+    [Range(1, 1000)]
+    float maxSpeed;
+
     [Header("Sled References")]
     [SerializeField]
     Sled Blue;
@@ -33,5 +37,9 @@ public class SledManager : MonoBehaviour
     void Update()
     {
         Physics.gravity = Vector3.down * gravity;
+        foreach (Sled sled in sleds)
+        {
+            sled.maxSpeed = maxSpeed;
+        }
     }
 }

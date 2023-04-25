@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Sled : MonoBehaviour
 {
+    public float maxSpeed;
+
     [SerializeField]
     Vector3 velocity;
 
@@ -12,20 +14,23 @@ public class Sled : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         if (rb == null)
         {
             rb = GetComponent<Rigidbody>();
         }
     }
 
-    public void Slide(Vector3 speed)
+    // Update is called once per frame
+    void Update()
     {
-        rb.AddForce(speed, ForceMode.VelocityChange);
+        Slide(maxSpeed);
+    }
+
+    public void Slide(float speed)
+    {
+        //rb.velocity = (targetEnd.transform.position.normalized - targetStart.transform.position.normalized) * speed;
+        rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -speed, speed), Mathf.Clamp(rb.velocity.y, -speed, speed), Mathf.Clamp(rb.velocity.z, -speed, speed));
+        velocity = rb.velocity;
+        //transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
     }
 }
