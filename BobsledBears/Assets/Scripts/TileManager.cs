@@ -21,10 +21,16 @@ public class TileManager : MonoBehaviour
     [SerializeField]
     List<GameObject> placedTiles = new List<GameObject>();
 
-    Vector3 firstTilePos = new Vector3(425, -314, -419);
-    Vector3 firstTileRot = new Vector3(239.854f, -45, -90);
-    Vector3 firstTileSca = new Vector3(3600, 3600, 5701);
-    Vector3 nTileAdjustment = new Vector3(222, -182, -222);
+    [SerializeField]
+    Transform firstTile;
+
+    [SerializeField]
+    Transform secondTile;
+
+    Vector3 firstTilePos = Vector3.zero;
+    Vector3 firstTileRot = Vector3.zero;
+    Vector3 firstTileSca = Vector3.zero;
+    Vector3 nTileAdjustment = Vector3.zero;
 
     bool placedObstacle = false;
     int blanksPlaced = 0;
@@ -32,6 +38,11 @@ public class TileManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        firstTilePos = firstTile.transform.position;
+        firstTileRot = firstTile.transform.eulerAngles;
+        firstTileSca = firstTile.transform.localScale;
+        nTileAdjustment = secondTile.position - firstTile.position;
+
         //These tiles are blank because the player is still in the air from the jump
         for (int i = 0; i < 4; i++)
         {
