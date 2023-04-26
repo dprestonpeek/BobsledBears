@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    int left = -1;
-    int right = 1;
+    [SerializeField]
+    bool isPlayer1 = false;
 
     bool movingLeft = false;
     bool movingRight = false;
     float newZ = 0;
-
    
-    public int lane = 0;
+    public int currentLane = 0;
     int prevLane = 0;
     bool betweenLanes = false;
 
@@ -23,55 +22,56 @@ public class Player : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public virtual void Update()
     {
-        DetermineLane();
-        if (InputBridge.Left || movingLeft)
+        DetermineLane(transform.position.z);
+        if ((isPlayer1 && InputBridge.Left) || movingLeft)
         {
             MoveLeft();
         }
-        if (InputBridge.Right || movingRight)
+        if ((isPlayer1 && InputBridge.Right) || movingRight)
         {
             MoveRight();
         }
     }
 
-    void DetermineLane()
+    //Keep note of the "Lane" so we can calculate a "perfect run" + score
+    public void DetermineLane(float zPos)
     {
         betweenLanes = movingLeft || movingRight;
-        float z = transform.position.z;
-        prevLane = lane;
+        float z = zPos;
+        prevLane = currentLane;
         if (z >= -150 && z < -100)
         {
-            lane = -3;
+            currentLane = -3;
         }
         else if (z >= -100 && z < -50)
         {
-            lane = -2;
+            currentLane = -2;
         }
         else if (z >= -50 && z < 0)
         {
-            lane = -1;
+            currentLane = -1;
         }
         else if (z >= 0 && z < 50)
         {
-            lane = 0;
+            currentLane = 0;
         }
         else if (z >= 50 && z < 100)
         {
-            lane = 1;
+            currentLane = 1;
         }
         else if (z >= 100 && z < 150)
         {
-            lane = 2;
+            currentLane = 2;
         }
         else if (z >= 150)
         {
-            lane = 3;
+            currentLane = 3;
         }
     }
 
-    void MoveRight()
+    public void MoveRight()
     {
         if (transform.position.z < 150)
         {
@@ -95,7 +95,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void MoveLeft()
+    public void MoveLeft()
     {
         if (transform.position.z > -150)
         {
