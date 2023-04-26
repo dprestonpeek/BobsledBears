@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Sled : MonoBehaviour
 {
+    public string Name = "Sled";
+
     public bool onIceStrip = false;
     public bool exitedIceStrip = false;
 

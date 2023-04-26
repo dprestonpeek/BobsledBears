@@ -20,7 +20,7 @@ public class EndTrigger : MonoBehaviour
     {
         if (other.CompareTag("Sled") && !GameManager.Instance.finished.Contains(other.gameObject))
         {
-            GameManager.Instance.finished.Add(other.gameObject);
+            GameManager.Instance.AddToScoreboard(other.GetComponent<Sled>());
         }
     }
 }
