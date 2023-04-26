@@ -23,6 +23,11 @@ public class SledManager : MonoBehaviour
     [SerializeField]
     Sled Green;
 
+    public Vector3 blueVel;
+    public Vector3 redVel;
+    public Vector3 YellowVel;
+    public Vector3 GreenVel;
+
     List<Sled> sleds;
     List<Rigidbody> sledRbs;
 
@@ -36,6 +41,10 @@ public class SledManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        blueVel = Blue.velocity;
+        redVel = Red.velocity;
+        YellowVel = Yellow.velocity;
+        GreenVel = Green.velocity;
         Physics.gravity = Vector3.down * gravity;
         foreach (Sled sled in sleds)
         {

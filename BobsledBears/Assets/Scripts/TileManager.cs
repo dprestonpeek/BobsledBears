@@ -51,6 +51,10 @@ public class TileManager : MonoBehaviour
         //Place the obstacle tiles with n blanks in between
         for (int i = 4; i < maxTiles; i++)
         {
+            if (i == maxTiles / 2)
+            {
+                blankTilesBetweenObstacles--;
+            }
             if (placedObstacle)
             {
                 PlaceBlankTile(i);

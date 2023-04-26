@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    bool isPlayer1 = false;
+    public bool isPlayer1 = false;
 
     bool movingLeft = false;
     bool movingRight = false;

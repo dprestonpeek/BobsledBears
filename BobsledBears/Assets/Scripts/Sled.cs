@@ -7,15 +7,16 @@ public class Sled : MonoBehaviour
     public string Name = "Sled";
 
     public bool onIceStrip = false;
-    public bool exitedIceStrip = false;
+    bool exitedIceStrip = false;
+
+    public bool onJump = false;
+    bool exitedJump = false;
 
     public float currentMaxSpeed = 250;
     float defaultSpeed = 250;
 
-    public Vector3 newEu;
-
     [SerializeField]
-    Vector3 velocity;
+    public Vector3 velocity;
 
     Rigidbody rb;
 
@@ -37,29 +38,56 @@ public class Sled : MonoBehaviour
         {
             PostIceStrip();
         }
+        else
+        {
+            exitedIceStrip = false;
+        }
+        if (exitedJump)
+        {
+            PostJump();
+        }
+        else
+        {
+            exitedJump = false;
+        }
     }
 
     public void Slide(float speed)
     {
-        //rb.velocity = (targetEnd.transform.position.normalized - targetStart.transform.position.normalized) * speed;
         rb.velocity = new Vector3(Mathf.Clamp(rb.velocity.x, -speed, speed), Mathf.Clamp(rb.velocity.y, -speed, speed), Mathf.Clamp(rb.velocity.z, -speed, speed));
         velocity = rb.velocity;
-        //transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed);
     }
 
     public void SetSpeed(float defaultSpeed)
     {
         this.defaultSpeed = defaultSpeed;
-        if (!exitedIceStrip)
+
+        if (onIceStrip)
         {
-            if (onIceStrip)
-            {
-                currentMaxSpeed = defaultSpeed + 500;
-            }
-            else
-            {
-                currentMaxSpeed = defaultSpeed;
-            }
+            exitedIceStrip = false;
+            exitedJump = false;
+            currentMaxSpeed = defaultSpeed + 500;
+            //rb.AddForce(Vector3.forward * 100, ForceMode.Acceleration);
+        }
+        else if (exitedIceStrip)
+        {
+            PostIceStrip();
+        }
+        if (onJump)
+        {
+            exitedIceStrip = false;
+            exitedJump = false;
+            currentMaxSpeed = defaultSpeed + 500;
+            rb.AddForce(Vector3.forward * 10000, ForceMode.Impulse);
+        }
+        else if (exitedJump)
+        { 
+            PostJump(); 
+        }
+
+        if (!onIceStrip && !onJump && !exitedIceStrip && !exitedJump)
+        {
+            currentMaxSpeed = defaultSpeed;
         }
     }
 
@@ -67,26 +95,29 @@ public class Sled : MonoBehaviour
     {
         onIceStrip = false;
         exitedIceStrip = true;
-        currentMaxSpeed = Mathf.Lerp(currentMaxSpeed, defaultSpeed, 5 * Time.deltaTime);
-        if (currentMaxSpeed - .2 <= defaultSpeed)
+        //currentMaxSpeed = Mathf.Lerp(currentMaxSpeed, defaultSpeed, .001f * Time.deltaTime);
+        if (currentMaxSpeed > defaultSpeed)
         {
-            currentMaxSpeed = defaultSpeed;
+            currentMaxSpeed -= 5;
+        }
+        else if (currentMaxSpeed == defaultSpeed)
+        {
             exitedIceStrip = false;
         }
     }
 
-    void ClampRotation()
+    public void PostJump()
     {
-        newEu = rb.transform.eulerAngles;
-        if (newEu.x > 80)
+        onJump = false;
+        exitedJump = true;
+
+        if (currentMaxSpeed > defaultSpeed)
         {
-            newEu.x = 80;
+            currentMaxSpeed -= 5;
         }
-        if (newEu.x < 0)
+        else if (currentMaxSpeed == defaultSpeed)
         {
-            newEu.x = 0;
+            exitedJump = false;
         }
-        ////newEu.x = Mathf.Clamp(newEu.x, 0, 80);
-        transform.eulerAngles = newEu;
     }
 }

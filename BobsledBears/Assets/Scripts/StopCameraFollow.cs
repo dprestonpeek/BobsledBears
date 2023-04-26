@@ -9,6 +9,10 @@ public class StopCameraFollow : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        camera.StopFollowing();
+        Player player = other.GetComponent<Player>();
+        if (player && player.isPlayer1)
+        {
+            camera.StopFollowing();
+        }
     }
 }
