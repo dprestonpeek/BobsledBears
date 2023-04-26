@@ -6,10 +6,10 @@ public class Bot : Player
 {
     [SerializeField]
     [Range(0, 1000)]
-    int detectDist = 5;
+    int detectDist = 250;
 
-    public bool choseADir = false;
-    public int attemptsToAvoid = 0;
+    bool choseADir = false;
+    int attemptsToAvoid = 0;
 
     bool avoidObstacle = false;
     bool hitObstacle = false;
@@ -29,7 +29,6 @@ public class Bot : Player
         if (DetectObstacle(transform.position.z))
         {
             avoidObstacle = true;
-            Debug.Log("Detected Obstacle");
             switch (difficulty)
             {
                 case Difficulty.EASY:
