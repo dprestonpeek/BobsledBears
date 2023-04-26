@@ -11,7 +11,7 @@ public class SledManager : MonoBehaviour
 
     [SerializeField]
     [Range(1, 1000)]
-    float maxSpeed;
+    float defaultSpeed = 250;
 
     [Header("Sled References")]
     [SerializeField]
@@ -39,7 +39,7 @@ public class SledManager : MonoBehaviour
         Physics.gravity = Vector3.down * gravity;
         foreach (Sled sled in sleds)
         {
-            sled.maxSpeed = maxSpeed;
+            sled.SetSpeed(defaultSpeed);
         }
     }
 }

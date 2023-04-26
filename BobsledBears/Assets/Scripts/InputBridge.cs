@@ -20,7 +20,7 @@ public class InputBridge : MonoBehaviour
     void Update()
     {
         if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A) || 
-            Input.GetKeyDown(KeyCode.DownArrow)) && count == 0)
+            Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S)) && count == 0)
         {
             Left = true;
         }
@@ -30,7 +30,7 @@ public class InputBridge : MonoBehaviour
             count = 0;
         }
         if ((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D) || 
-            Input.GetKeyDown(KeyCode.UpArrow)) && count == 0)
+            Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) && count == 0)
         {
             Right = true;
         }
