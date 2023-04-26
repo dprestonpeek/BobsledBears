@@ -13,6 +13,7 @@ public class Bot : Player
 
     bool avoidObstacle = false;
     bool hitObstacle = false;
+    bool touchingObstacle = false;
 
     enum Difficulty { EASY, NORMAL };
     [SerializeField]
@@ -26,7 +27,7 @@ public class Bot : Player
         base.Update();
 
         //if we are not already avoiding an obstacle and detected one
-        if (DetectObstacle(transform.position.z))
+        if (DetectObstacle(transform.position.z) || touchingObstacle)
         {
             avoidObstacle = true;
             switch (difficulty)
@@ -160,29 +161,34 @@ public class Bot : Player
 
         if (attemptsToAvoid < 20)
         {
-            if (path == Direction.LEFT)
+            MoveAlongPath();
+        }
+    }
+
+    void MoveAlongPath()
+    {
+        if (path == Direction.LEFT)
+        {
+            if (currentLane == -3) //we hit the edge, change dir
             {
-                if (currentLane == -3) //we hit the edge, change dir
-                {
-                    path = Direction.RIGHT;
-                    attemptsToAvoid++;
-                }
-                else
-                {
-                    MoveLeft();
-                }
+                path = Direction.RIGHT;
+                attemptsToAvoid++;
             }
-            if (path == Direction.RIGHT)
+            else
             {
-                if (currentLane == 3) //we hit the edge, change dir
-                {
-                    path = Direction.LEFT;
-                    attemptsToAvoid++;
-                }
-                else
-                {
-                    MoveRight();
-                }
+                MoveLeft();
+            }
+        }
+        if (path == Direction.RIGHT)
+        {
+            if (currentLane == 3) //we hit the edge, change dir
+            {
+                path = Direction.LEFT;
+                attemptsToAvoid++;
+            }
+            else
+            {
+                MoveRight();
             }
         }
     }
@@ -211,6 +217,22 @@ public class Bot : Player
         if (other.gameObject.CompareTag("Obstacle"))
         {
             hitObstacle = true;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.CompareTag("Obstacle"))
+        {
+            touchingObstacle = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Obstacle"))
+        {
+            touchingObstacle = false;
         }
     }
 }

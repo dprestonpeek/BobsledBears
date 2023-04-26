@@ -12,6 +12,8 @@ public class Sled : MonoBehaviour
     public float currentMaxSpeed = 250;
     float defaultSpeed = 250;
 
+    public Vector3 newEu;
+
     [SerializeField]
     Vector3 velocity;
 
@@ -30,6 +32,7 @@ public class Sled : MonoBehaviour
     void FixedUpdate()
     {
         Slide(currentMaxSpeed);
+        //ClampRotation();
         if (exitedIceStrip)
         {
             PostIceStrip();
@@ -70,5 +73,20 @@ public class Sled : MonoBehaviour
             currentMaxSpeed = defaultSpeed;
             exitedIceStrip = false;
         }
+    }
+
+    void ClampRotation()
+    {
+        newEu = rb.transform.eulerAngles;
+        if (newEu.x > 80)
+        {
+            newEu.x = 80;
+        }
+        if (newEu.x < 0)
+        {
+            newEu.x = 0;
+        }
+        ////newEu.x = Mathf.Clamp(newEu.x, 0, 80);
+        transform.eulerAngles = newEu;
     }
 }
