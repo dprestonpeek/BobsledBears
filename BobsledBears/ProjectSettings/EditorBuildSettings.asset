@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Downhill.unity
+    guid: 0c6a5adac5beb7147b01dbcc60c0269d
   m_configObjects: {}

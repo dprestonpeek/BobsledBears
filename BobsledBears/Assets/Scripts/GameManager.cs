@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
             {
                 EndRace();
             }
-            else
+            if (finished.Count < 4)
             {
                 timer += Time.deltaTime;
                 string mins = "" + (timer / 60);
