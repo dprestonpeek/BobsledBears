@@ -36,14 +36,17 @@ public class SledManager : MonoBehaviour
     public Vector3 YellowVel;
     public Vector3 GreenVel;
 
-    List<Sled> sleds;
-    List<Rigidbody> sledRbs;
+    public List<Sled> sleds;
+    public List<Rigidbody> sledRbs;
 
     // Start is called before the first frame update
     void Start()
     {
         sleds = new List<Sled>() { Blue, Red, Yellow, Green };
-
+        foreach (Sled sled in sleds)
+        {
+            sledRbs.Add(sled.GetComponent<Rigidbody>());
+        }
     }
 
     // Update is called once per frame

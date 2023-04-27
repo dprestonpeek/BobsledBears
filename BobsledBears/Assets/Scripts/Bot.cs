@@ -17,9 +17,9 @@ public class Bot : Player
     bool hitBoost = false;
     bool touchingBoost = false;
 
-    enum Difficulty { EASY, NORMAL, HARD };
+    public enum Difficulty { EASY, NORMAL, HARD };
     [SerializeField]
-    Difficulty difficulty = Difficulty.EASY;
+    public Difficulty difficulty = Difficulty.EASY;
 
     enum Direction { LEFT, RIGHT, NONE };
     Direction path = Direction.NONE;
@@ -54,6 +54,22 @@ public class Bot : Player
             {
                 ChooseOpenPath();
             }
+        }
+    }
+
+    public void SetDifficulty(float diff)
+    {
+        switch (diff)
+        {
+            case 0:
+                difficulty = Difficulty.EASY;
+                break;
+            case 1:
+                difficulty = Difficulty.NORMAL;
+                break;
+            case 2:
+                difficulty = Difficulty.HARD;
+                break;
         }
     }
 

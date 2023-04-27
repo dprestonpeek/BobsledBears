@@ -24,6 +24,8 @@ public class Sled : MonoBehaviour
     public Vector3 velocity;
 
     Rigidbody rb;
+    Player player;
+    Bot bot;
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +34,8 @@ public class Sled : MonoBehaviour
         {
             rb = GetComponent<Rigidbody>();
         }
+        player = GetComponent<Player>();
+        bot = GetComponent<Bot>();
     }
 
     // Update is called once per frame
@@ -123,6 +127,26 @@ public class Sled : MonoBehaviour
         else if (currentMaxSpeed == defaultSpeed)
         {
             exitedJump = false;
+        }
+    }
+
+    public void SetDifficulty(float diff)
+    {
+        GetComponent<Bot>().SetDifficulty(diff);
+    }
+
+    public void ToggleBotControl()
+    {
+        if (player.enabled && player.isPlayer1)
+        {
+            player.enabled = false;
+            bot.enabled = true;
+            return;
+        }
+        if (bot.enabled)
+        {
+            player.enabled = true;
+            bot.enabled = false;
         }
     }
 }
