@@ -22,27 +22,30 @@ public class InputBridge : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A) || 
-            Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S) || LeftTouch) && count == 0)
+        if (GameManager.Instance.raceInSession)
         {
-            Left = true;
-            LeftTouch = false;
-        }
-        else
-        {
-            Left = false;
-            count = 0;
-        }
-        if ((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D) || 
-            Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || RightTouch) && count == 0)
-        {
-            Right = true;
-            RightTouch = false;
-        }
-        else
-        {
-            Right = false;
-            count = 0;
+            if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A) ||
+                Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S) || LeftTouch) && count == 0)
+            {
+                Left = true;
+                LeftTouch = false;
+            }
+            else
+            {
+                Left = false;
+                count = 0;
+            }
+            if ((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D) ||
+                Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) || RightTouch) && count == 0)
+            {
+                Right = true;
+                RightTouch = false;
+            }
+            else
+            {
+                Right = false;
+                count = 0;
+            }
         }
     }
 

@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public bool raceInSession = false;
+
     [SerializeField]
     Scoreboard scoreboard;
 
@@ -18,7 +20,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     public List<GameObject> finished = new List<GameObject>();
-
 
     bool raceStarted = false;
     float timer = 0;
@@ -35,6 +36,10 @@ public class GameManager : MonoBehaviour
     {
         if (raceStarted)
         {
+            if (!raceInSession)
+            {
+                raceInSession = true;
+            }
             if (finished.Contains(sleds.sleds[0].gameObject))
             {
                 EndRace();
@@ -70,6 +75,7 @@ public class GameManager : MonoBehaviour
 
     public void EndRace()
     {
+        raceInSession = false;
         MenuManager.Instance.PostGame.SetActive(true);
     }
 
