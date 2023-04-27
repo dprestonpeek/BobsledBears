@@ -8,6 +8,7 @@ TagManager:
   - Jump
   - Obstacle
   - EndTrigger
+  - IceStrip
   layers:
   - Default
   - TransparentFX

@@ -13,6 +13,14 @@ public class SledManager : MonoBehaviour
     [Range(1, 1000)]
     float defaultSpeed = 250;
 
+    [SerializeField]
+    [Range(1, 1000)]
+    public int iceSpeed = 800;
+    [SerializeField]
+    [Range(1, 1000)]
+    public int jumpSpeed = 500;
+
+
     [Header("Sled References")]
     [SerializeField]
     Sled Blue;
@@ -49,6 +57,8 @@ public class SledManager : MonoBehaviour
         foreach (Sled sled in sleds)
         {
             sled.SetSpeed(defaultSpeed);
+            sled.iceSpeed = iceSpeed;
+            sled.jumpSpeed = jumpSpeed;
         }
     }
 }

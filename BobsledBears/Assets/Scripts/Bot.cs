@@ -9,13 +9,15 @@ public class Bot : Player
     int detectDist = 250;
 
     bool choseADir = false;
-    int attemptsToAvoid = 0;
+    int attemptsToMove = 0;
 
     bool avoidObstacle = false;
     bool hitObstacle = false;
     bool touchingObstacle = false;
+    bool hitBoost = false;
+    bool touchingBoost = false;
 
-    enum Difficulty { EASY, NORMAL };
+    enum Difficulty { EASY, NORMAL, HARD };
     [SerializeField]
     Difficulty difficulty = Difficulty.EASY;
 
@@ -40,11 +42,50 @@ public class Bot : Player
                     break;
             }
         }
+
+        //if difficulty is hard, choose a boost path if exists, otherwise avoid obstacles
+        if (difficulty == Difficulty.HARD)
+        {
+            if (ScanForBoostLanes().Count > 0)
+            {
+                ChooseBoostPath();
+            }
+            else if (DetectObstacle(transform.position.z))
+            {
+                ChooseOpenPath();
+            }
+        }
     }
 
     bool DetectObstacle(float zPos)
     {
         bool detectedObstacle = false;
+        string tag = DetectObstacleTag(zPos);
+
+        //is the object an obstacle?
+        if (tag.Equals("Obstacle"))
+        {
+            detectedObstacle = true;
+        }
+        return detectedObstacle;
+    }
+
+    bool DetectBoost(float zPos)
+    {
+        bool detectedBoost = false;
+        string tag = DetectObstacleTag(zPos);
+
+        //is the object a booster?
+        if (tag.Equals("Jump") || tag.Equals("IceStrip"))
+        {
+            detectedBoost = true;
+        }
+        return detectedBoost;
+    }
+
+    string DetectObstacleTag(float zPos)
+    {
+        string tag = "";
         //3 different rays to cover the left, right and center of the sled
         for (int i = -20; i < 20; i += 20)
         {
@@ -58,26 +99,23 @@ public class Bot : Player
             if (Physics.Raycast(newPos, transform.TransformDirection(Vector3.forward * 400), out hit, detectDist, layerMask))
             {
                 Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-                //is the object an obstacle?
-                if (hit.transform.gameObject.CompareTag("Obstacle"))
-                {
-                    detectedObstacle = true;
-                }
+                tag = hit.transform.gameObject.tag;
             }
             else
             {
-                if (hitObstacle || attemptsToAvoid >= 20)
+                if (hitObstacle || attemptsToMove >= 20)
                 {
                     //we are no longer hitting the obstacle
                     hitObstacle = false;
                     avoidObstacle = false;
-                    attemptsToAvoid = 0;
+
+                    attemptsToMove = 0;
                     path = Direction.NONE;
                     choseADir = false;
                 }
             }
         }
-        return detectedObstacle;
+        return tag;
     }
 
     List<int> ScanForOpenLanes()
@@ -96,9 +134,26 @@ public class Bot : Player
         return openLanes;
     }
 
+    List<int> ScanForBoostLanes()
+    {
+        int lane = -3;
+        List<int> boostLanes = new List<int>();
+        for (int i = -150; i <= 150; i += 50)
+        {
+            if (DetectBoost(i))
+            {
+                boostLanes.Add(lane);
+            }
+            lane++;
+        }
+
+        return boostLanes;
+    }
+
     void ChoosePathEasy()
     {
-        ChooseRandomPath();
+        Invoke("ChooseRandomPath", .35f);
+        //ChooseRandomPath();
     }
 
     void ChoosePathNormal()
@@ -150,6 +205,68 @@ public class Bot : Player
         }
     }
 
+    void ChooseBoostPath()
+    {
+        List<int> boostLanes = ScanForBoostLanes();
+        Direction firstDir = GetRandomDir();
+        if (boostLanes.Contains(currentLane))
+        {
+            return;
+        }
+        else
+        {
+            foreach (int lane in boostLanes)
+            {
+                if (lane < currentLane)
+                {
+                    firstDir = Direction.LEFT;
+                }
+                else
+                {
+                    firstDir = Direction.RIGHT;
+                }
+            }
+        }
+        if (firstDir == Direction.LEFT)
+        {
+            for (int i = 1; i < 6; i++)
+            {
+                if (boostLanes.Contains(currentLane - i))
+                {
+                    MoveLeft();
+                    return;
+                }
+            }
+            for (int i = 1; i < 6; i++)
+            {
+                if (boostLanes.Contains(currentLane + i))
+                {
+                    MoveRight();
+                    return;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 1; i < 6; i++)
+            {
+                if (boostLanes.Contains(currentLane + i))
+                {
+                    MoveRight();
+                    return;
+                }
+            }
+            for (int i = 1; i < 6; i++)
+            {
+                if (boostLanes.Contains(currentLane - i))
+                {
+                    MoveLeft();
+                    return;
+                }
+            }
+        }
+    }
+
     void ChooseRandomPath()
     {
         //pick a random path on first time thru
@@ -159,7 +276,7 @@ public class Bot : Player
             choseADir = true;
         }
 
-        if (attemptsToAvoid < 20)
+        if (attemptsToMove < 20)
         {
             MoveAlongPath();
         }
@@ -172,7 +289,7 @@ public class Bot : Player
             if (currentLane == -3) //we hit the edge, change dir
             {
                 path = Direction.RIGHT;
-                attemptsToAvoid++;
+                attemptsToMove++;
             }
             else
             {
@@ -184,7 +301,7 @@ public class Bot : Player
             if (currentLane == 3) //we hit the edge, change dir
             {
                 path = Direction.LEFT;
-                attemptsToAvoid++;
+                attemptsToMove++;
             }
             else
             {

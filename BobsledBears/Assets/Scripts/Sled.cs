@@ -15,6 +15,11 @@ public class Sled : MonoBehaviour
     public float currentMaxSpeed = 250;
     float defaultSpeed = 250;
 
+    [HideInInspector]
+    public int iceSpeed = 800;
+    [HideInInspector]
+    public int jumpSpeed = 500;
+
     [SerializeField]
     public Vector3 velocity;
 
@@ -66,7 +71,7 @@ public class Sled : MonoBehaviour
         {
             exitedIceStrip = false;
             exitedJump = false;
-            currentMaxSpeed = defaultSpeed + 500;
+            currentMaxSpeed = defaultSpeed + iceSpeed;
             //rb.AddForce(Vector3.forward * 100, ForceMode.Acceleration);
         }
         else if (exitedIceStrip)
@@ -77,8 +82,8 @@ public class Sled : MonoBehaviour
         {
             exitedIceStrip = false;
             exitedJump = false;
-            currentMaxSpeed = defaultSpeed + 500;
-            rb.AddForce(Vector3.forward * 10000, ForceMode.Impulse);
+            currentMaxSpeed = defaultSpeed + jumpSpeed;
+            //rb.AddForce(Vector3.forward * 10000, ForceMode.Impulse);
         }
         else if (exitedJump)
         { 
