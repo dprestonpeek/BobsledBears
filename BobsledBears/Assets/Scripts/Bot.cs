@@ -10,6 +10,8 @@ public class Bot : Player
 
     bool choseADir = false;
     int attemptsToMove = 0;
+    int maxAttempts = 5;
+    int avoidance = 0;
 
     bool avoidObstacle = false;
     bool hitObstacle = false;
@@ -17,12 +19,19 @@ public class Bot : Player
     bool hitBoost = false;
     bool touchingBoost = false;
 
+    Rigidbody rb;
+
     public enum Difficulty { EASY, NORMAL, HARD };
     [SerializeField]
     public Difficulty difficulty = Difficulty.EASY;
 
     enum Direction { LEFT, RIGHT, NONE };
     Direction path = Direction.NONE;
+
+    private void Start()
+    {
+        rb = GetComponentInChildren<Rigidbody>();
+    }
 
     public override void Update()
     {
@@ -111,24 +120,33 @@ public class Bot : Player
             RaycastHit hit;
             Vector3 newPos = transform.position;
             newPos.z = zPos;
+
+            if (attemptsToMove >= maxAttempts)
+            {
+                tag = "Untagged";
+                Hop();
+                return tag;
+            }
+
             // Does the ray intersect any objects excluding the player layer
             if (Physics.Raycast(newPos, transform.TransformDirection(Vector3.forward * 400), out hit, detectDist, layerMask))
             {
                 Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
                 tag = hit.transform.gameObject.tag;
-            }
-            else
-            {
-                if (hitObstacle || attemptsToMove >= 20)
+                if (hit.distance < 60)
                 {
-                    //we are no longer hitting the obstacle
-                    hitObstacle = false;
-                    avoidObstacle = false;
-
-                    attemptsToMove = 0;
-                    path = Direction.NONE;
-                    choseADir = false;
+                    hitObstacle = true;
                 }
+            }
+            else if (hitObstacle || attemptsToMove >= maxAttempts)
+            {
+                //we are no longer hitting the obstacle
+                hitObstacle = false;
+                avoidObstacle = false;
+
+                attemptsToMove = 0;
+                path = Direction.NONE;
+                choseADir = false;
             }
         }
         return tag;
@@ -292,7 +310,7 @@ public class Bot : Player
             choseADir = true;
         }
 
-        if (attemptsToMove < 20)
+        if (attemptsToMove < maxAttempts)
         {
             MoveAlongPath();
         }
@@ -324,6 +342,11 @@ public class Bot : Player
                 MoveRight();
             }
         }
+    }
+
+    void Hop()
+    {
+        rb.AddForce(Vector3.up * 5);
     }
 
     Direction GetRandomDir()
